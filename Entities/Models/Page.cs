@@ -35,37 +35,37 @@ public partial class Page
 
     public string CreatedBy { get; set; } = null!;
 
-    public virtual ICollection<Contact> Contacts { get; } = new List<Contact>();
+    public virtual ICollection<Contact> Contacts { get; set; } = new List<Contact>();
 
-    public virtual ICollection<Faqheader> Faqheaders { get; } = new List<Faqheader>();
+    public virtual ICollection<Faqheader> Faqheaders { get; set; } = new List<Faqheader>();
 
-    public virtual ICollection<Page> InversePageNavigation { get; } = new List<Page>();
+    public virtual ICollection<Page> InversePageNavigation { get; set; } = new List<Page>();
 
     public virtual Language Language { get; set; } = null!;
 
     public virtual Layout Layout { get; set; } = null!;
 
-    public virtual ICollection<Link> Links { get; } = new List<Link>();
+    public virtual ICollection<Link> Links { get; set; } = new List<Link>();
 
-    public virtual ICollection<LiveChat> LiveChats { get; } = new List<LiveChat>();
+    public virtual ICollection<LiveChat> LiveChats { get; set; } = new List<LiveChat>();
 
     public virtual Medium? Media { get; set; }
 
-    public virtual ICollection<Menu> MenuPage1s { get; } = new List<Menu>();
+    public virtual ICollection<Menu> MenuPage1s { get; set; } = new List<Menu>();
 
-    public virtual ICollection<Menu> MenuPageNavigations { get; } = new List<Menu>();
+    public virtual ICollection<Menu> MenuPageNavigations { get; set; } = new List<Menu>();
 
-    public virtual ICollection<Menu> MenuPages { get; } = new List<Menu>();
+    public virtual ICollection<Menu> MenuPages { get; set; } = new List<Menu>();
 
-    public virtual ICollection<PageMedium> PageMedia { get; } = new List<PageMedium>();
+    public virtual ICollection<PageMedium> PageMedia { get; set; } = new List<PageMedium>();
 
     public virtual Page? PageNavigation { get; set; }
 
-    public virtual ICollection<Personel> Personels { get; } = new List<Personel>();
+    public virtual ICollection<Personel> Personels { get; set; } = new List<Personel>();
 
-    public virtual ICollection<PostCategory> PostCategories { get; } = new List<PostCategory>();
+    public virtual ICollection<PostCategory> PostCategories { get; set; } = new List<PostCategory>();
 
-    public virtual ICollection<Slide> Slides { get; } = new List<Slide>();
+    public virtual ICollection<Slide> Slides { get; set; } = new List<Slide>();
 
     public virtual Template Template { get; set; } = null!;
 }

@@ -33,5 +33,5 @@ public partial class PostCategory
 
     public virtual Page? Page { get; set; }
 
-    public virtual ICollection<PostsInCategory> PostsInCategories { get; } = new List<PostsInCategory>();
+    public virtual ICollection<PostsInCategory> PostsInCategories { get; set; } = new List<PostsInCategory>();
 }

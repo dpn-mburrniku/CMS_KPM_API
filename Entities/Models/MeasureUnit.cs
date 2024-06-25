@@ -15,5 +15,5 @@ public partial class MeasureUnit
 
     public string? NameSr { get; set; }
 
-    public virtual ICollection<MunicipalityLocation> MunicipalityLocations { get; } = new List<MunicipalityLocation>();
+    public virtual ICollection<MunicipalityLocation> MunicipalityLocations { get; set; } = new List<MunicipalityLocation>();
 }

@@ -23,7 +23,7 @@ public partial class SysMenu
 
     public int? OrderNo { get; set; }
 
-    public bool? Active { get; set; }
+    public bool Active { get; set; }
 
     public DateTime? Modified { get; set; }
 
@@ -33,9 +33,9 @@ public partial class SysMenu
 
     public string CreatedBy { get; set; } = null!;
 
-    public virtual ICollection<SysMenu> InverseParent { get; } = new List<SysMenu>();
+    public virtual ICollection<SysMenu> InverseParent { get; set; } = new List<SysMenu>();
 
     public virtual SysMenu? Parent { get; set; }
 
-    public virtual ICollection<SysMenuRole> SysMenuRoles { get; } = new List<SysMenuRole>();
+    public virtual ICollection<SysMenuRole> SysMenuRoles { get; set; } = new List<SysMenuRole>();
 }

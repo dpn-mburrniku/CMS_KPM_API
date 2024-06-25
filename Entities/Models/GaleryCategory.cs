@@ -13,5 +13,5 @@ public partial class GaleryCategory
 
     public string? NameSr { get; set; }
 
-    public virtual ICollection<GaleryHeader> GaleryHeaders { get; } = new List<GaleryHeader>();
+    public virtual ICollection<GaleryHeader> GaleryHeaders { get; set; } = new List<GaleryHeader>();
 }

@@ -23,5 +23,5 @@ public partial class MenuType
 
     public virtual Layout? Layout { get; set; }
 
-    public virtual ICollection<Menu> Menus { get; } = new List<Menu>();
+    public virtual ICollection<Menu> Menus { get; set; } = new List<Menu>();
 }

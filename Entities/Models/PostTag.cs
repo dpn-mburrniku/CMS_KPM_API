@@ -11,7 +11,7 @@ public partial class PostTag
 
     public string Description { get; set; } = null!;
 
-    public bool? Active { get; set; }
+    public bool Active { get; set; }
 
     public DateTime? Modified { get; set; }
 
@@ -21,5 +21,5 @@ public partial class PostTag
 
     public string CreatedBy { get; set; } = null!;
 
-    public virtual ICollection<PostsInTag> PostsInTags { get; } = new List<PostsInTag>();
+    public virtual ICollection<PostsInTag> PostsInTags { get; set; } = new List<PostsInTag>();
 }

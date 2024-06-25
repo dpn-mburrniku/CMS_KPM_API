@@ -11,5 +11,5 @@ public partial class CultureCode
 
     public string? CultureCodeCountry { get; set; }
 
-    public virtual ICollection<Language> Languages { get; } = new List<Language>();
+    public virtual ICollection<Language> Languages { get; set; } = new List<Language>();
 }

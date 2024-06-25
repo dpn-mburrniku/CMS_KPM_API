@@ -37,7 +37,7 @@ public partial class LiveChat
 
     public string CreatedBy { get; set; } = null!;
 
-    public virtual ICollection<LiveChat> InverseLiveChatNavigation { get; } = new List<LiveChat>();
+    public virtual ICollection<LiveChat> InverseLiveChatNavigation { get; set; } = new List<LiveChat>();
 
     public virtual Language Language { get; set; } = null!;
 

@@ -25,7 +25,7 @@ public partial class Faqheader
 
     public string CreatedBy { get; set; } = null!;
 
-    public virtual ICollection<Faqdetail> Faqdetails { get; } = new List<Faqdetail>();
+    public virtual ICollection<Faqdetail> Faqdetails { get; set; } = new List<Faqdetail>();
 
     public virtual Layout Layout { get; set; } = null!;
 

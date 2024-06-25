@@ -15,5 +15,5 @@ public partial class LinkType
 
     public virtual ComponentLocation ComponentLocation { get; set; } = null!;
 
-    public virtual ICollection<Link> Links { get; } = new List<Link>();
+    public virtual ICollection<Link> Links { get; set; } = new List<Link>();
 }

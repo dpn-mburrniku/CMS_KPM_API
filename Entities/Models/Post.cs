@@ -43,9 +43,9 @@ public partial class Post
 
     public virtual Medium? Media { get; set; }
 
-    public virtual ICollection<PostMedium> PostMedia { get; } = new List<PostMedium>();
+    public virtual ICollection<PostMedium> PostMedia { get; set; } = new List<PostMedium>();
 
-    public virtual ICollection<PostsInCategory> PostsInCategories { get; } = new List<PostsInCategory>();
+    public virtual ICollection<PostsInCategory> PostsInCategories { get; set; } = new List<PostsInCategory>();
 
-    public virtual ICollection<PostsInTag> PostsInTags { get; } = new List<PostsInTag>();
+    public virtual ICollection<PostsInTag> PostsInTags { get; set; } = new List<PostsInTag>();
 }

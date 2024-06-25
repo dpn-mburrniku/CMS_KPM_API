@@ -11,7 +11,7 @@ public partial class MediaEx
 
     public string? MediaExPath { get; set; }
 
-    public virtual ICollection<Medium> Media { get; } = new List<Medium>();
+    public virtual ICollection<Medium> Media { get; set; } = new List<Medium>();
 
     public virtual MediaExCategory MediaExCategory { get; set; } = null!;
 }

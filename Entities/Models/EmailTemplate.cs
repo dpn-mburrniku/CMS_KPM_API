@@ -23,5 +23,5 @@ public partial class EmailTemplate
 
     public string CreatedBy { get; set; } = null!;
 
-    public virtual ICollection<EmailTemplateItem> EmailTemplateItems { get; } = new List<EmailTemplateItem>();
+    public virtual ICollection<EmailTemplateItem> EmailTemplateItems { get; set; } = new List<EmailTemplateItem>();
 }

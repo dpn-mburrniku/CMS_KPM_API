@@ -19,9 +19,9 @@ public partial class Language
 
     public virtual CultureCode? CultureCode { get; set; }
 
-    public virtual ICollection<LiveChat> LiveChats { get; } = new List<LiveChat>();
+    public virtual ICollection<LiveChat> LiveChats { get; set; } = new List<LiveChat>();
 
-    public virtual ICollection<Page> Pages { get; } = new List<Page>();
+    public virtual ICollection<Page> Pages { get; set; } = new List<Page>();
 
-    public virtual ICollection<ResourceTranslationString> ResourceTranslationStrings { get; } = new List<ResourceTranslationString>();
+    public virtual ICollection<ResourceTranslationString> ResourceTranslationStrings { get; set; } = new List<ResourceTranslationString>();
 }

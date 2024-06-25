@@ -31,27 +31,27 @@ public partial class Medium
 
     public string CreatedBy { get; set; } = null!;
 
-    public virtual ICollection<Contact> Contacts { get; } = new List<Contact>();
+    public virtual ICollection<Contact> Contacts { get; set; } = new List<Contact>();
 
     public virtual MediaEx? FileExNavigation { get; set; }
 
-    public virtual ICollection<GaleryDetail> GaleryDetails { get; } = new List<GaleryDetail>();
+    public virtual ICollection<GaleryDetail> GaleryDetails { get; set; } = new List<GaleryDetail>();
 
     public virtual MediaExCategory MediaExCategory { get; set; } = null!;
 
-    public virtual ICollection<Municipality> Municipalities { get; } = new List<Municipality>();
+    public virtual ICollection<Municipality> Municipalities { get; set; } = new List<Municipality>();
 
-    public virtual ICollection<MunicipalityLocation> MunicipalityLocations { get; } = new List<MunicipalityLocation>();
+    public virtual ICollection<MunicipalityLocation> MunicipalityLocations { get; set; } = new List<MunicipalityLocation>();
 
-    public virtual ICollection<PageMedium> PageMedia { get; } = new List<PageMedium>();
+    public virtual ICollection<PageMedium> PageMedia { get; set; } = new List<PageMedium>();
 
-    public virtual ICollection<Page> Pages { get; } = new List<Page>();
+    public virtual ICollection<Page> Pages { get; set; } = new List<Page>();
 
-    public virtual ICollection<Personel> Personels { get; } = new List<Personel>();
+    public virtual ICollection<Personel> Personels { get; set; } = new List<Personel>();
 
-    public virtual ICollection<PostMedium> PostMedia { get; } = new List<PostMedium>();
+    public virtual ICollection<PostMedium> PostMedia { get; set; } = new List<PostMedium>();
 
-    public virtual ICollection<Post> Posts { get; } = new List<Post>();
+    public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 
-    public virtual ICollection<Slide> Slides { get; } = new List<Slide>();
+    public virtual ICollection<Slide> Slides { get; set; } = new List<Slide>();
 }

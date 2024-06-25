@@ -15,9 +15,9 @@ public partial class ComponentLocation
 
     public int? OrderNo { get; set; }
 
-    public bool? Active { get; set; }
+    public bool Active { get; set; }
 
-    public virtual ICollection<LinkType> LinkTypes { get; } = new List<LinkType>();
+    public virtual ICollection<LinkType> LinkTypes { get; set; } = new List<LinkType>();
 
-    public virtual ICollection<SocialNetwork> SocialNetworks { get; } = new List<SocialNetwork>();
+    public virtual ICollection<SocialNetwork> SocialNetworks { get; set; } = new List<SocialNetwork>();
 }

@@ -13,7 +13,7 @@ public partial class MediaExCategory
 
     public string? NameSr { get; set; }
 
-    public virtual ICollection<Medium> Media { get; } = new List<Medium>();
+    public virtual ICollection<Medium> Media { get; set; } = new List<Medium>();
 
-    public virtual ICollection<MediaEx> MediaExes { get; } = new List<MediaEx>();
+    public virtual ICollection<MediaEx> MediaExes { get; set; } = new List<MediaEx>();
 }

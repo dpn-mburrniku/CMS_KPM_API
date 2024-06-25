@@ -9,5 +9,5 @@ public partial class ResourceTranslationType
 
     public string Name { get; set; } = null!;
 
-    public virtual ICollection<ResourceTranslationString> ResourceTranslationStrings { get; } = new List<ResourceTranslationString>();
+    public virtual ICollection<ResourceTranslationString> ResourceTranslationStrings { get; set; } = new List<ResourceTranslationString>();
 }

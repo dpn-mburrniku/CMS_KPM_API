@@ -19,25 +19,25 @@ public partial class Layout
 
     public bool? Active { get; set; }
 
-    public virtual ICollection<Contact> Contacts { get; } = new List<Contact>();
+    public virtual ICollection<Contact> Contacts { get; set; } = new List<Contact>();
 
-    public virtual ICollection<Faqheader> Faqheaders { get; } = new List<Faqheader>();
+    public virtual ICollection<Faqheader> Faqheaders { get; set; } = new List<Faqheader>();
 
-    public virtual ICollection<GaleryHeader> GaleryHeaders { get; } = new List<GaleryHeader>();
+    public virtual ICollection<GaleryHeader> GaleryHeaders { get; set; } = new List<GaleryHeader>();
 
-    public virtual ICollection<LayoutRole> LayoutRoles { get; } = new List<LayoutRole>();
+    public virtual ICollection<LayoutRole> LayoutRoles { get; set; } = new List<LayoutRole>();
 
-    public virtual ICollection<Link> Links { get; } = new List<Link>();
+    public virtual ICollection<Link> Links { get; set; } = new List<Link>();
 
-    public virtual ICollection<MenuType> MenuTypes { get; } = new List<MenuType>();
+    public virtual ICollection<MenuType> MenuTypes { get; set; } = new List<MenuType>();
 
-    public virtual ICollection<Page> Pages { get; } = new List<Page>();
+    public virtual ICollection<Page> Pages { get; set; } = new List<Page>();
 
-    public virtual ICollection<Personel> Personels { get; } = new List<Personel>();
+    public virtual ICollection<Personel> Personels { get; set; } = new List<Personel>();
 
-    public virtual ICollection<PostCategory> PostCategories { get; } = new List<PostCategory>();
+    public virtual ICollection<PostCategory> PostCategories { get; set; } = new List<PostCategory>();
 
-    public virtual ICollection<Slide> Slides { get; } = new List<Slide>();
+    public virtual ICollection<Slide> Slides { get; set; } = new List<Slide>();
 
-    public virtual ICollection<SocialNetwork> SocialNetworks { get; } = new List<SocialNetwork>();
+    public virtual ICollection<SocialNetwork> SocialNetworks { get; set; } = new List<SocialNetwork>();
 }

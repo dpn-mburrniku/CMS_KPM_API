@@ -53,13 +53,13 @@ public partial class AspNetUser
 
     public DateTime PasswordExpires { get; set; }
 
-    public bool? ChangePassword { get; set; }
+    public bool ChangePassword { get; set; }
 
     public DateTime? ValidFrom { get; set; }
 
     public DateTime? ValidTo { get; set; }
 
-    public bool? Active { get; set; }
+    public bool Active { get; set; }
 
     public DateTime? Created { get; set; }
 
@@ -69,7 +69,7 @@ public partial class AspNetUser
 
     public string? ModifiedBy { get; set; }
 
-    public virtual ICollection<ThemeConfig> ThemeConfigs { get; } = new List<ThemeConfig>();
+    public virtual ICollection<ThemeConfig> ThemeConfigs { get; set; } = new List<ThemeConfig>();
 
-    public virtual ICollection<AspNetRole> Roles { get; } = new List<AspNetRole>();
+    public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();
 }

@@ -3,6 +3,7 @@ using Contracts.IServices;
 using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repository.Extensions;
+using Abp.Linq.Expressions;
 
 namespace Repository.Repositories
 {
@@ -20,7 +21,14 @@ namespace Repository.Repositories
         {
             var layoutsId = _cmsContext.LayoutRoles.Where(x => x.RoleId == RoleId).AsNoTracking().Select(x => x.LayoutId).Distinct().ToList();
 
-            var result = !trackChanges ? _cmsContext.Layouts.Where(x => !layoutsId.Contains(x.Id)).IgnoreAutoIncludes().AsNoTracking() : _cmsContext.Layouts.Where(x => !layoutsId.Contains(x.Id));
+            var layoutsQuery = PredicateBuilder.False<Layout>();
+
+            foreach (var id in layoutsId)
+            {
+                layoutsQuery = layoutsQuery.Or(t => t.Id == id);
+            }
+
+            var result = !trackChanges ? _cmsContext.Layouts.Where(layoutsQuery).IgnoreAutoIncludes().AsNoTracking() : _cmsContext.Layouts.Where(layoutsQuery);
 
             if (includes != null)
             {
@@ -36,7 +44,14 @@ namespace Repository.Repositories
         {
             var layoutsId = _cmsContext.LayoutRoles.Where(x => x.RoleId == RoleId).AsNoTracking().Select(x => x.LayoutId).Distinct().ToList();
 
-            var result = !trackChanges ? _cmsContext.Layouts.Where(x => layoutsId.Contains(x.Id)).IgnoreAutoIncludes().AsNoTracking() : _cmsContext.Layouts.Where(x => layoutsId.Contains(x.Id));
+            var layoutsQuery = PredicateBuilder.False<Layout>();
+
+            foreach (var id in layoutsId)
+            {
+                layoutsQuery = layoutsQuery.Or(t => t.Id == id);
+            }
+
+            var result = !trackChanges ? _cmsContext.Layouts.Where(layoutsQuery).IgnoreAutoIncludes().AsNoTracking() : _cmsContext.Layouts.Where(layoutsQuery);
 
             return result;
         }

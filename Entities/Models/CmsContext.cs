@@ -129,15 +129,15 @@ public partial class CmsContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(256);
             entity.Property(e => e.NameEn)
                 .HasMaxLength(128)
-                .HasDefaultValueSql("(N'')")
+                .HasDefaultValue("")
                 .HasColumnName("Name_EN");
             entity.Property(e => e.NameSq)
                 .HasMaxLength(128)
-                .HasDefaultValueSql("(N'')")
+                .HasDefaultValue("")
                 .HasColumnName("Name_SQ");
             entity.Property(e => e.NameSr)
                 .HasMaxLength(128)
-                .HasDefaultValueSql("(N'')")
+                .HasDefaultValue("")
                 .HasColumnName("Name_SR");
             entity.Property(e => e.NormalizedName).HasMaxLength(256);
         });
@@ -152,19 +152,12 @@ public partial class CmsContext : DbContext
         modelBuilder.Entity<AspNetUser>(entity =>
         {
             entity.Property(e => e.Id).HasMaxLength(256);
-            entity.Property(e => e.Active)
-                .IsRequired()
-                .HasDefaultValueSql("(CONVERT([bit],(0)))");
-            entity.Property(e => e.ChangePassword)
-                .IsRequired()
-                .HasDefaultValueSql("(CONVERT([bit],(0)))");
-            entity.Property(e => e.Created).HasDefaultValueSql("('0001-01-01T00:00:00.0000000')");
+            entity.Property(e => e.Created).HasDefaultValue(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
             entity.Property(e => e.Email).HasMaxLength(256);
-            entity.Property(e => e.Firstname).HasDefaultValueSql("(N'')");
-            entity.Property(e => e.Lastname).HasDefaultValueSql("(N'')");
+            entity.Property(e => e.Firstname).HasDefaultValue("");
+            entity.Property(e => e.Lastname).HasDefaultValue("");
             entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
-            entity.Property(e => e.PasswordExpires).HasDefaultValueSql("('0001-01-01T00:00:00.0000000')");
             entity.Property(e => e.PersonalNumber).HasMaxLength(10);
             entity.Property(e => e.ProfileImage).HasMaxLength(512);
             entity.Property(e => e.UserName).HasMaxLength(256);
@@ -183,7 +176,7 @@ public partial class CmsContext : DbContext
                         .HasConstraintName("FK_AspNetUserRoles_AspNetUsers"),
                     j =>
                     {
-                        j.HasKey("UserId", "RoleId").HasName("PK__AspNetUs__AF2760AD604C984E");
+                        j.HasKey("UserId", "RoleId").HasName("PK__AspNetUs__AF2760AD36979424");
                         j.ToTable("AspNetUserRoles");
                         j.IndexerProperty<string>("UserId").HasMaxLength(256);
                     });
@@ -216,9 +209,7 @@ public partial class CmsContext : DbContext
         {
             entity.ToTable("ComponentLocation");
 
-            entity.Property(e => e.Active)
-                .IsRequired()
-                .HasDefaultValueSql("((1))");
+            entity.Property(e => e.Active).HasDefaultValue(true);
             entity.Property(e => e.TitleEn)
                 .HasMaxLength(250)
                 .HasColumnName("Title_EN");
@@ -356,7 +347,7 @@ public partial class CmsContext : DbContext
             entity.Property(e => e.CreatedBy).HasMaxLength(256);
             entity.Property(e => e.Modified).HasColumnType("datetime");
             entity.Property(e => e.ModifiedBy).HasMaxLength(256);
-            entity.Property(e => e.OrderNo).HasDefaultValueSql("((0))");
+            entity.Property(e => e.OrderNo).HasDefaultValue(0);
             entity.Property(e => e.Question).HasMaxLength(500);
 
             entity.HasOne(d => d.Faqheader).WithMany(p => p.Faqdetails)
@@ -434,9 +425,7 @@ public partial class CmsContext : DbContext
             entity.Property(e => e.CreatedBy).HasMaxLength(256);
             entity.Property(e => e.Modified).HasColumnType("datetime");
             entity.Property(e => e.ModifiedBy).HasMaxLength(256);
-            entity.Property(e => e.ShfaqNeHome)
-                .IsRequired()
-                .HasDefaultValueSql("((1))");
+            entity.Property(e => e.ShfaqNeHome).HasDefaultValue(true);
             entity.Property(e => e.Title).HasMaxLength(250);
 
             entity.HasOne(d => d.Category).WithMany(p => p.GaleryHeaders)
@@ -484,7 +473,7 @@ public partial class CmsContext : DbContext
         {
             entity.ToTable("Layout");
 
-            entity.Property(e => e.Active).HasDefaultValueSql("((1))");
+            entity.Property(e => e.Active).HasDefaultValue(true);
             entity.Property(e => e.Description).HasMaxLength(2000);
             entity.Property(e => e.NameEn)
                 .HasMaxLength(50)
@@ -520,9 +509,7 @@ public partial class CmsContext : DbContext
 
             entity.ToTable("Link");
 
-            entity.Property(e => e.Active)
-                .IsRequired()
-                .HasDefaultValueSql("((1))");
+            entity.Property(e => e.Active).HasDefaultValue(true);
             entity.Property(e => e.Created).HasColumnType("datetime");
             entity.Property(e => e.CreatedBy).HasMaxLength(256);
             entity.Property(e => e.LinkName).HasMaxLength(100);
@@ -695,15 +682,11 @@ public partial class CmsContext : DbContext
 
             entity.ToTable("Menu");
 
-            entity.Property(e => e.Active)
-                .IsRequired()
-                .HasDefaultValueSql("((1))");
+            entity.Property(e => e.Active).HasDefaultValue(true);
             entity.Property(e => e.Created).HasColumnType("datetime");
             entity.Property(e => e.CreatedBy).HasMaxLength(256);
-            entity.Property(e => e.IsClickable)
-                .IsRequired()
-                .HasDefaultValueSql("((1))");
-            entity.Property(e => e.Level).HasDefaultValueSql("((1))");
+            entity.Property(e => e.IsClickable).HasDefaultValue(true);
+            entity.Property(e => e.Level).HasDefaultValue(1);
             entity.Property(e => e.MenuParentId).HasColumnName("MenuParentID");
             entity.Property(e => e.MenuTypeId).HasColumnName("MenuTypeID");
             entity.Property(e => e.Modified).HasColumnType("datetime");
@@ -871,7 +854,7 @@ public partial class CmsContext : DbContext
             entity.Property(e => e.Created).HasColumnType("datetime");
             entity.Property(e => e.CreatedBy).HasMaxLength(256);
             entity.Property(e => e.DocumentParentId)
-                .HasDefaultValueSql("((0))")
+                .HasDefaultValue(0)
                 .HasColumnName("DocumentParentID");
             entity.Property(e => e.EndDate).HasColumnType("datetime");
             entity.Property(e => e.Link).HasMaxLength(50);
@@ -898,7 +881,7 @@ public partial class CmsContext : DbContext
 
             entity.ToTable("Personel");
 
-            entity.Property(e => e.BirthDate).HasColumnType("date");
+            entity.Property(e => e.BirthDate).HasColumnType("datetime");
             entity.Property(e => e.BirthPlace).HasMaxLength(100);
             entity.Property(e => e.Created).HasColumnType("datetime");
             entity.Property(e => e.CreatedBy).HasMaxLength(256);
@@ -908,7 +891,7 @@ public partial class CmsContext : DbContext
             entity.Property(e => e.Modified).HasColumnType("datetime");
             entity.Property(e => e.ModifiedBy).HasMaxLength(256);
             entity.Property(e => e.Name).HasMaxLength(50);
-            entity.Property(e => e.OrderNo).HasDefaultValueSql("((0))");
+            entity.Property(e => e.OrderNo).HasDefaultValue(0);
             entity.Property(e => e.PageId).HasColumnName("PageID");
             entity.Property(e => e.PhoneNumber).HasMaxLength(50);
             entity.Property(e => e.Position).HasMaxLength(200);
@@ -997,9 +980,7 @@ public partial class CmsContext : DbContext
         {
             entity.HasKey(e => new { e.Id, e.LanguageId });
 
-            entity.Property(e => e.Active)
-                .IsRequired()
-                .HasDefaultValueSql("((1))");
+            entity.Property(e => e.Active).HasDefaultValue(true);
             entity.Property(e => e.Created).HasColumnType("datetime");
             entity.Property(e => e.CreatedBy).HasMaxLength(256);
             entity.Property(e => e.Description).HasMaxLength(200);
@@ -1077,8 +1058,8 @@ public partial class CmsContext : DbContext
             entity.HasKey(e => e.Name).HasName("PK__Sekuenca__3362627DD0CAC167");
 
             entity.Property(e => e.Name).HasMaxLength(255);
-            entity.Property(e => e.Incr).HasDefaultValueSql("((1))");
-            entity.Property(e => e.Seed).HasDefaultValueSql("((1))");
+            entity.Property(e => e.Incr).HasDefaultValue(1);
+            entity.Property(e => e.Seed).HasDefaultValue(1);
         });
 
         modelBuilder.Entity<Setting>(entity =>
@@ -1098,15 +1079,15 @@ public partial class CmsContext : DbContext
 
             entity.Property(e => e.Created).HasColumnType("datetime");
             entity.Property(e => e.CreatedBy).HasMaxLength(256);
-            entity.Property(e => e.Deleted).HasDefaultValueSql("((0))");
-            entity.Property(e => e.Description).HasMaxLength(200);
+            entity.Property(e => e.Deleted).HasDefaultValue(false);
+            entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.LayoutId).HasColumnName("LayoutID");
             entity.Property(e => e.Link).HasMaxLength(200);
             entity.Property(e => e.MediaId).HasColumnName("MediaID");
             entity.Property(e => e.Modified).HasColumnType("datetime");
             entity.Property(e => e.ModifiedBy).HasMaxLength(256);
             entity.Property(e => e.PageId).HasColumnName("PageID");
-            entity.Property(e => e.Title).HasMaxLength(50);
+            entity.Property(e => e.Title).HasMaxLength(250);
 
             entity.HasOne(d => d.Layout).WithMany(p => p.Slides)
                 .HasForeignKey(d => d.LayoutId)
@@ -1150,9 +1131,7 @@ public partial class CmsContext : DbContext
         {
             entity.ToTable("SysMenu");
 
-            entity.Property(e => e.Active)
-                .IsRequired()
-                .HasDefaultValueSql("((1))");
+            entity.Property(e => e.Active).HasDefaultValue(true);
             entity.Property(e => e.Created).HasColumnType("datetime");
             entity.Property(e => e.CreatedBy).HasMaxLength(256);
             entity.Property(e => e.Icon).HasMaxLength(50);

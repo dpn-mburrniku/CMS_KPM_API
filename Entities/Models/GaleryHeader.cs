@@ -19,7 +19,7 @@ public partial class GaleryHeader
 
     public bool IsDeleted { get; set; }
 
-    public bool? ShfaqNeHome { get; set; }
+    public bool ShfaqNeHome { get; set; }
 
     public DateTime? Modified { get; set; }
 
@@ -31,7 +31,7 @@ public partial class GaleryHeader
 
     public virtual GaleryCategory Category { get; set; } = null!;
 
-    public virtual ICollection<GaleryDetail> GaleryDetails { get; } = new List<GaleryDetail>();
+    public virtual ICollection<GaleryDetail> GaleryDetails { get; set; } = new List<GaleryDetail>();
 
     public virtual Layout Layout { get; set; } = null!;
 }

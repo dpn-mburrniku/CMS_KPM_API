@@ -33,11 +33,11 @@ public partial class Menu
 
     public string? Target { get; set; }
 
-    public bool? Active { get; set; }
+    public bool Active { get; set; }
 
     public bool IsMegaMenu { get; set; }
 
-    public bool? IsClickable { get; set; }
+    public bool IsClickable { get; set; }
 
     public DateTime? Modified { get; set; }
 
@@ -47,7 +47,7 @@ public partial class Menu
 
     public string CreatedBy { get; set; } = null!;
 
-    public virtual ICollection<Menu> InverseMenuNavigation { get; } = new List<Menu>();
+    public virtual ICollection<Menu> InverseMenuNavigation { get; set; } = new List<Menu>();
 
     public virtual Menu? MenuNavigation { get; set; }
 

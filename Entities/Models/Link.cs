@@ -21,7 +21,7 @@ public partial class Link
 
     public string LinkTarget { get; set; } = null!;
 
-    public bool? Active { get; set; }
+    public bool Active { get; set; }
 
     public int OrderNo { get; set; }
 

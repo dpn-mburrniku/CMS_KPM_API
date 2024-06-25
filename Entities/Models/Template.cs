@@ -13,5 +13,5 @@ public partial class Template
 
     public bool? TemplateUrlWithId { get; set; }
 
-    public virtual ICollection<Page> Pages { get; } = new List<Page>();
+    public virtual ICollection<Page> Pages { get; set; } = new List<Page>();
 }

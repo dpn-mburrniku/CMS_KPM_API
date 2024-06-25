@@ -11,5 +11,5 @@ public partial class Gender
 
     public string? Name { get; set; }
 
-    public virtual ICollection<Contact> Contacts { get; } = new List<Contact>();
+    public virtual ICollection<Contact> Contacts { get; set; } = new List<Contact>();
 }

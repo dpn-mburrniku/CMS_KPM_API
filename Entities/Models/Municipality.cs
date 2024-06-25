@@ -27,5 +27,5 @@ public partial class Municipality
 
     public virtual Medium? Media { get; set; }
 
-    public virtual ICollection<MunicipalityLocation> MunicipalityLocations { get; } = new List<MunicipalityLocation>();
+    public virtual ICollection<MunicipalityLocation> MunicipalityLocations { get; set; } = new List<MunicipalityLocation>();
 }
