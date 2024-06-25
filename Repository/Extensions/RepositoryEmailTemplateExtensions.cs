@@ -1,0 +1,67 @@
+﻿
+using System;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Linq.Dynamic.Core;
+using Entities.Models;
+using CMS.API;
+
+namespace Repository.Extensions
+{
+	public static class RepositoryEmailTemplateExtensions
+	{
+		public static IQueryable<EmailTemplate> FilterEmailTemplateByLanguage(this IQueryable<EmailTemplate> emailTemplate, int? filter) =>
+		emailTemplate.Where(e => e.LanguageId == filter);
+
+		public static IQueryable<EmailTemplate> Search(this IQueryable<EmailTemplate> emailTemplate, string query)
+		{
+			if (string.IsNullOrWhiteSpace(query))
+				return emailTemplate;
+
+			var lowerCaseTerm = query.Trim().ToLower();
+
+			emailTemplate = emailTemplate.Where(e => e.Name.ToLower().Contains(lowerCaseTerm) || e.Subject.ToLower().Contains(lowerCaseTerm) 
+			|| e.Content.ToLower().Contains(lowerCaseTerm)); 
+
+			return emailTemplate;
+		}
+
+		public static IQueryable<EmailTemplate> Sort(this IQueryable<EmailTemplate> slide, string orderByQueryString)
+		{
+			if (string.IsNullOrWhiteSpace(orderByQueryString))
+				return slide.OrderBy(e => e.Id);
+
+			var orderParams = orderByQueryString.Trim().Split(',');
+			var propertyInfos = typeof(EmailTemplate).GetProperties(BindingFlags.Public |
+									BindingFlags.Instance);
+
+			var orderQueryBuilder = new StringBuilder();
+
+			foreach (var param in orderParams)
+			{
+				if (string.IsNullOrWhiteSpace(param))
+					continue;
+
+				var propertyFromQueryName = param.Split(" ")[0];
+				var objectProperty = propertyInfos.FirstOrDefault(pi =>
+
+				pi.Name.Equals(propertyFromQueryName, StringComparison.InvariantCultureIgnoreCase));
+
+				if (objectProperty == null)
+					continue;
+
+				var direction = param.EndsWith(" desc") ? "descending" : "ascending";
+				orderQueryBuilder.Append($"{objectProperty.Name.ToString()} {direction}, ");
+			}
+
+			var orderQuery = orderQueryBuilder.ToString().TrimEnd(',', ' ');
+
+			if (string.IsNullOrWhiteSpace(orderQuery))
+				return slide.OrderBy(e => e.Id);
+
+			return slide.OrderBy(orderQuery);
+		}
+	}
+
+}

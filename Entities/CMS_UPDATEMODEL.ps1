@@ -1,0 +1,1 @@
+Scaffold-DbContext "Server=80.80.161.82,64085\SQL2014;Database=CMS_QKSUK;User ID=cms; Password=cms.dpn.2017#; Integrated Security=False;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir ..\Entities\Models -Context CmsContext -Force

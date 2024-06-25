@@ -1,0 +1,65 @@
+﻿
+using System;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Linq.Dynamic.Core;
+using Entities.Models; using CMS.API;
+
+namespace Repository.Extensions
+{
+    public static class RepositoryPostTagsExtensions
+    {  
+        public static IQueryable<PostTag> Search(this IQueryable<PostTag> tag, string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return tag;
+
+            var lowerCaseTerm = query.Trim().ToLower();
+
+            tag = tag.Where(e => e.Description.ToLower().Contains(lowerCaseTerm));
+
+            return tag;
+        }
+
+        public static IQueryable<PostTag> FilterTagByLanguage(this IQueryable<PostTag> tag, int? filter) =>
+        tag.Where(e => e.LanguageId == filter);
+
+        public static IQueryable<PostTag> Sort(this IQueryable<PostTag> tag, string orderByQueryString)
+        {
+            if (string.IsNullOrWhiteSpace(orderByQueryString))
+                return tag.OrderBy(e => e.Description);
+
+            var orderParams = orderByQueryString.Trim().Split(',');
+            var propertyInfos = typeof(PostTag).GetProperties(BindingFlags.Public |
+                        BindingFlags.Instance);
+
+            var orderQueryBuilder = new StringBuilder();
+
+            foreach (var param in orderParams)
+            {
+                if (string.IsNullOrWhiteSpace(param))
+                    continue;
+
+                var propertyFromQueryName = param.Split(" ")[0];
+                var objectProperty = propertyInfos.FirstOrDefault(pi =>
+
+                pi.Name.Equals(propertyFromQueryName, StringComparison.InvariantCultureIgnoreCase));
+
+                if (objectProperty == null)
+                    continue;
+
+                var direction = param.EndsWith(" desc") ? "descending" : "ascending";
+                orderQueryBuilder.Append($"{objectProperty.Name.ToString()} {direction}, ");
+            }
+
+            var orderQuery = orderQueryBuilder.ToString().TrimEnd(',', ' ');
+
+            if (string.IsNullOrWhiteSpace(orderQuery))
+                return tag.OrderBy(e => e.Description);
+
+            return tag.OrderBy(orderQuery);
+        }
+    }
+
+}
