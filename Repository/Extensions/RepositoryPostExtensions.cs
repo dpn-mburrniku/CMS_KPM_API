@@ -2,6 +2,7 @@
 using System.Text;
 using System.Linq.Dynamic.Core;
 using Entities.Models;
+using Abp.Linq.Expressions;
 
 namespace Repository.Extensions
 {
@@ -14,10 +15,21 @@ namespace Repository.Extensions
 										&& (datoTo != null ? e.StartDate.Date <= datoTo.Value : true));
 		public static IQueryable<Post> FilterPostByLanguage(this IQueryable<Post> page, int? filter) =>
 		page.Where(e => e.LanguageId == filter);
-		public static IQueryable<Post> FilterPostByPostCategoryId(this IQueryable<Post> page, List<int>? postIds) =>
-		page.Where(e => postIds == null ? true : postIds.Contains(e.Id));
+        //public static IQueryable<Post> FilterPostByPostCategoryId(this IQueryable<Post> page, List<int>? postIds) =>
+        //page.Where(e => postIds == null ? true : postIds.Contains(e.Id));
+        public static IQueryable<Post> FilterPostByPostCategoryId(this IQueryable<Post> page, List<int>? postIds)
+        {
+            var postQuery = PredicateBuilder.False<Post>();
 
-		public static IQueryable<Post> FilterIsDeleted(this IQueryable<Post> page, bool isDeleted) =>
+            foreach (var id in postIds)
+            {
+                postQuery = postQuery.Or(t => t.Id == id);
+            }
+            var result = postIds == null ? page : page.Where(postQuery);
+			return result;
+        }
+
+        public static IQueryable<Post> FilterIsDeleted(this IQueryable<Post> page, bool isDeleted) =>
 			page.Where(e => e.Deleted == isDeleted);
 
 		public static IQueryable<Post> Search(this IQueryable<Post> page, string query)

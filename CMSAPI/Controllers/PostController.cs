@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Entities.Models;
 using NetTopologySuite.Index.HPRtree;
 using System.Runtime.InteropServices;
+using Abp.Linq.Expressions;
 
 namespace CMS.API.Controllers
 {
@@ -68,9 +69,18 @@ namespace CMS.API.Controllers
 			var postCategoryList = await _unitOfWork.PostCategories.FindAll(false, includes)
 					.Where(t => t.LanguageId == parameter.webLangId && t.Id == (parameter.PostCategoryId > 0 ? parameter.PostCategoryId : t.Id)
 					 && t.LayoutId == parameter.LayoutId).ToListAsync();
-			//&& (parameter.LayoutId > 0 ? t.LayoutId == parameter.LayoutId : layouts.Select(x => x.Id).Contains(t.LayoutId))).ToListAsync();
-			var postInCategories = _unitOfWork.PostsInCategory.FindByCondition(x => postCategoryList.Distinct().Select(x => x.Id).ToList().Contains(x.PostCategoryId)
-			&& x.LanguageId == parameter.webLangId, false, null);
+            //&& (parameter.LayoutId > 0 ? t.LayoutId == parameter.LayoutId : layouts.Select(x => x.Id).Contains(t.LayoutId))).ToListAsync();
+
+
+            var postInCategoryQuery = PredicateBuilder.False<PostsInCategory>();
+
+            foreach (var id in postCategoryList.Distinct().Select(x => x.Id))
+            {
+                postInCategoryQuery = postInCategoryQuery.Or(t => t.PostCategoryId == id);
+            }
+			postInCategoryQuery = postInCategoryQuery.And(x => x.LanguageId == parameter.webLangId);
+
+            var postInCategories = _unitOfWork.PostsInCategory.FindByCondition(postInCategoryQuery, false, null);
 
 			postIds = postInCategories.Distinct().Select(x => x.PostId).ToList();
 
