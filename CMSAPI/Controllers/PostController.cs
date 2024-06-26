@@ -38,15 +38,40 @@ namespace CMS.API.Controllers
 			var userRoles = await _unitOfWork.BaseConfig.GetUserRolesId(userId);
 			var layouts = await _unitOfWork.Layouts.GetLayoutsByRole(userRoles.FirstOrDefault(), false, new[] { "LayoutRoles" });
 
-			var postCategoryList = await _unitOfWork.PostCategories.FindAll(false, includes).Where(t => layouts.Select(x => x.Id).Contains(t.LayoutId)).Where(t => t.LanguageId == webLangId && t.Active == true).ToListAsync();
-			var postInCategories = _unitOfWork.PostsInCategory.FindByCondition(x => postCategoryList.Distinct().Select(x => x.Id).ToList().Contains(x.PostCategoryId)
-			&& x.LanguageId == webLangId, false, null);
+            var postCategoriesQuery = PredicateBuilder.False<PostCategory>();
+
+			foreach (var id in layouts.Select(x => x.Id))
+			{
+				postCategoriesQuery = postCategoriesQuery.Or(t => t.LayoutId == id);
+			}
+			postCategoriesQuery = postCategoriesQuery.And(t => t.LanguageId == webLangId && t.Active == true);
+
+            var postCategoryList = await _unitOfWork.PostCategories.FindByCondition(postCategoriesQuery, false, includes).ToListAsync();
+
+
+            var postsInCategoryQuery = PredicateBuilder.False<PostsInCategory>();
+
+            foreach (var id in postCategoryList.Distinct().Select(x => x.Id).ToList())
+            {
+                postsInCategoryQuery = postsInCategoryQuery.Or(t => t.PostCategoryId == id);
+            }
+            postsInCategoryQuery = postsInCategoryQuery.And(t => t.LanguageId == webLangId);
+
+            var postInCategories = _unitOfWork.PostsInCategory.FindByCondition(postsInCategoryQuery, false, null);
 
 			List<int> postIds = postInCategories.Distinct().Select(x => x.PostId).ToList();
 
-			var PostsList = await _unitOfWork.Posts.FindAll(false, new[] { "Media", "PostsInCategories", "PostsInCategories.PostCategory" }).IgnoreAutoIncludes()
-														.Where(t => t.LanguageId == webLangId
-														&& postIds.Contains(t.Id)).ToListAsync();
+
+            var postQuery = PredicateBuilder.False<Post>();
+
+            foreach (var id in postIds)
+            {
+                postQuery = postQuery.Or(t => t.Id == id);
+            }
+            postQuery = postQuery.And(t => t.LanguageId == webLangId);
+
+            var PostsList = await _unitOfWork.Posts.FindByCondition(postQuery, false, new[] { "Media", "PostsInCategories", "PostsInCategories.PostCategory" }).IgnoreAutoIncludes().ToListAsync();
+			
 			var PostsDto = _mapper.Map<IEnumerable<PostListDto>?>(PostsList);
 			return Ok(PostsDto);
 		}
@@ -185,7 +210,15 @@ namespace CMS.API.Controllers
 
 						await _unitOfWork.Posts.Create(multipostEntity);
 						await _unitOfWork.Posts.Commit();
-						var _categoryIds = await _unitOfWork.PostCategories.FindByCondition(x => model.PostCategoryIds.Contains(x.Id) & x.LanguageId == item.Id, false, null).ToListAsync(); 
+
+                        var postCategoriesQuery = PredicateBuilder.False<PostCategory>();
+                        foreach (var id in model.PostCategoryIds)
+                        {
+                            postCategoriesQuery = postCategoriesQuery.Or(t => t.Id == id);
+                        }
+                        postCategoriesQuery = postCategoriesQuery.And(t => t.LanguageId == item.Id);
+
+                        var _categoryIds = await _unitOfWork.PostCategories.FindByCondition(postCategoriesQuery, false, null).ToListAsync(); 
 						foreach (var catId in _categoryIds)
 						{
 							var postsInCategoryEntity = new PostsInCategory()
@@ -202,8 +235,15 @@ namespace CMS.API.Controllers
 						}
 
 						if (model.PostTagsIds != null)
-						{
-                            var _tagsIds = await _unitOfWork.Tags.FindByCondition(x => model.PostTagsIds.Contains(x.Id) & x.LanguageId == item.Id, false, null).ToListAsync();
+                        {
+                            var postTagsQuery = PredicateBuilder.False<PostTag>();
+                            foreach (var id in model.PostCategoryIds)
+                            {
+                                postTagsQuery = postTagsQuery.Or(t => t.Id == id);
+                            }
+                            postTagsQuery = postTagsQuery.And(t => t.LanguageId == item.Id);
+
+                            var _tagsIds = await _unitOfWork.Tags.FindByCondition(postTagsQuery, false, null).ToListAsync();
                             foreach (var catId in _tagsIds)
                             {
                                 var postsInTagsEntity = new PostsInTag()
@@ -497,12 +537,22 @@ namespace CMS.API.Controllers
 			var userId = _unitOfWork.BaseConfig.GetLoggedUserId();
 			var userRoles = await _unitOfWork.BaseConfig.GetUserRolesId(userId);
 			var layouts = await _unitOfWork.Layouts.GetLayoutsByRole(userRoles.FirstOrDefault(), false, new[] { "LayoutRoles" });
-
-			var postCategoryList = await _unitOfWork.PostCategories
-					.FindByCondition(t => t.Active == true
-					&& (LayoutId > 0 ? t.LayoutId == LayoutId : layouts.Select(x => x.Id).Contains(t.LayoutId))
-					&& t.LanguageId == langId,
-                    false, includes).OrderBy(x => x.LayoutId).ThenBy(x => x.Id).ToListAsync();
+            
+			var postCategoryQuery = PredicateBuilder.False<PostCategory>();
+            if (LayoutId.HasValue)
+            {
+                postCategoryQuery = postCategoryQuery.And(x => x.LayoutId == LayoutId);
+            }
+            else
+            {
+                foreach (var id in layouts.Select(x => x.Id))
+                {
+                    postCategoryQuery = postCategoryQuery.Or(t => t.LayoutId == id);
+                }
+            }
+            postCategoryQuery = postCategoryQuery.And(x => x.Active == true);
+            postCategoryQuery = postCategoryQuery.And(x => x.LanguageId == langId);
+            var postCategoryList = await _unitOfWork.PostCategories.FindByCondition(postCategoryQuery, false, includes).OrderBy(x => x.LayoutId).ThenBy(x => x.Id).ToListAsync();
 
             var postCategoryDto = _mapper.Map<IEnumerable<PostCategoryListDto>?>(postCategoryList);
 			return Ok(postCategoryDto);
@@ -759,7 +809,15 @@ namespace CMS.API.Controllers
                     return NotFound();
                 }
 				var _postinCategoryIds = await _unitOfWork.PostsInCategory.FindByCondition(x => x.PostId == postId, false, null).Select(t => t.PostCategoryId).Distinct().ToListAsync();
-				var _layoutIds = await _unitOfWork.PostCategories.FindByCondition(t => _postinCategoryIds.Contains(t.Id), false, null).Select(t => t.LayoutId).Distinct().ToListAsync();
+                
+				var postCategoryQuery = PredicateBuilder.False<PostCategory>();
+
+				foreach (var id in _postinCategoryIds)
+				{
+					postCategoryQuery = postCategoryQuery.Or(t => t.Id == id);
+				}
+
+                var _layoutIds = await _unitOfWork.PostCategories.FindByCondition(postCategoryQuery, false, null).Select(t => t.LayoutId).Distinct().ToListAsync();
 
                 foreach (var layout in _layoutIds)
 				{
@@ -829,8 +887,16 @@ namespace CMS.API.Controllers
 					.Where(t => t.LanguageId == parameter.webLangId && t.Id == (parameter.PostCategoryId > 0 ? parameter.PostCategoryId : t.Id)
 					 && t.LayoutId == parameter.LayoutId).ToListAsync();
 
-			var postInCategories = _unitOfWork.PostsInCategory.FindByCondition(x => postCategoryList.Distinct().Select(x => x.Id).ToList().Contains(x.PostCategoryId)
-			&& x.LanguageId == parameter.webLangId, false, null);
+
+            var postInCategoryQuery = PredicateBuilder.False<PostsInCategory>();
+
+            foreach (var id in postCategoryList.Distinct().Select(x => x.Id))
+            {
+                postInCategoryQuery = postInCategoryQuery.Or(t => t.PostCategoryId == id);
+            }
+            postInCategoryQuery = postInCategoryQuery.And(x => x.LanguageId == parameter.webLangId);
+
+            var postInCategories = _unitOfWork.PostsInCategory.FindByCondition(postInCategoryQuery, false, null);
 
 			postIds = postInCategories.Distinct().Select(x => x.PostId).ToList();
 

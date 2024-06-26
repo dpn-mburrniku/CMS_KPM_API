@@ -8,6 +8,7 @@ using System.Data;
 using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Entities.Models;
+using Abp.Linq.Expressions;
 
 namespace CMS.API.Controllers
 {
@@ -41,9 +42,25 @@ namespace CMS.API.Controllers
 				var userRoles = await _unitOfWork.BaseConfig.GetUserRolesId(userId);
 				var layouts = await _unitOfWork.Layouts.GetLayoutsByRole(userRoles.FirstOrDefault(), false, new[] { "LayoutRoles" });
 				layoutIds = layouts.Select(x => x.Id).ToList();
-			}
-			var data = await _unitOfWork.Pages.FindByCondition(x => x.LanguageId == webLangId && x.Deleted != true && x.IsSubPage != true
-			&& (LayoutId > 0 ? x.LayoutId == LayoutId : layoutIds.Contains(x.LayoutId)), false, null).ToListAsync();
+            }
+
+            var pagesQuery = PredicateBuilder.False<Page>();
+            if (LayoutId.HasValue)
+            {
+                pagesQuery = pagesQuery.And(x => x.LayoutId == LayoutId);
+            }
+            else
+            {
+                foreach (var id in layoutIds)
+                {
+                    pagesQuery = pagesQuery.Or(t => t.LayoutId == id);
+                }
+            }
+            pagesQuery = pagesQuery.And(x => x.Deleted != true);
+            pagesQuery = pagesQuery.And(x => x.IsSubPage != true);
+            pagesQuery = pagesQuery.And(x => x.LanguageId == webLangId);
+
+            var data = await _unitOfWork.Pages.FindByCondition(pagesQuery, false, null).ToListAsync();
 
 			var dataDto = _mapper.Map<IEnumerable<PageJoinDto>?>(data);
 			return Ok(dataDto);
@@ -63,9 +80,29 @@ namespace CMS.API.Controllers
                 var layouts = await _unitOfWork.Layouts.GetLayoutsByRole(userRoles.FirstOrDefault(), false, new[] { "LayoutRoles" });
                 layoutIds = layouts.Select(x => x.Id).ToList();
             }
-            var pageContactsList = await _unitOfWork.Contacts.FindAll(false, null).Where(x => (LayoutId > 0 ? x.LayoutId == LayoutId : layoutIds.Contains(x.LayoutId))).Select(x => x.PageId).Distinct().ToListAsync();
+            var contactQuery = PredicateBuilder.False<Contact>();
+			if (LayoutId.HasValue)
+			{
+				contactQuery = contactQuery.And(x => x.LayoutId == LayoutId);
+			}
+			else
+			{
+				foreach (var id in layoutIds)
+				{
+					contactQuery = contactQuery.Or(t => t.LayoutId == id);
+				}
+			}
+            var pageContactsList = await _unitOfWork.Contacts.FindAll(false, null).Where(contactQuery).Select(x => x.PageId).Distinct().ToListAsync();
 
-            var pageList = _unitOfWork.Pages.FindByCondition(x => pageContactsList.Contains(x.Id) && x.Deleted != true && x.IsSubPage != true && x.LanguageId == webLangId, false, null);
+            var pageContactsQuery = PredicateBuilder.False<Page>();
+            foreach (var id in pageContactsList)
+            {
+                pageContactsQuery = pageContactsQuery.Or(t => t.Id == id);
+            }
+            pageContactsQuery = pageContactsQuery.And(x => x.Deleted != true);
+            pageContactsQuery = pageContactsQuery.And(x => x.IsSubPage != true);
+            pageContactsQuery = pageContactsQuery.And(x => x.LanguageId == webLangId);
+            var pageList = _unitOfWork.Pages.FindByCondition(pageContactsQuery, false, null);
 
             var dataDto = _mapper.Map<IEnumerable<PageJoinDto>?>(pageList);
             return Ok(dataDto);
@@ -631,8 +668,15 @@ namespace CMS.API.Controllers
 		{
 			var subPageParentIds = await _unitOfWork.Pages.FindByCondition(x => x.IsSubPage == true && x.Deleted != false, false, null).Select(x => x.PageParentId).ToListAsync();
 
-			var data = await _unitOfWork.Pages.FindByCondition(x => x.LanguageId == webLangId
-			&& (subPageParentIds.Contains(x.Id)), false, null).ToListAsync();
+            var pagesQuery = PredicateBuilder.False<Page>();
+
+            foreach (var id in subPageParentIds)
+            {
+                pagesQuery = pagesQuery.Or(t => t.Id == id);
+            }
+            pagesQuery = pagesQuery.And(x => x.LanguageId == webLangId);
+
+            var data = await _unitOfWork.Pages.FindByCondition(pagesQuery, false, null).ToListAsync();
 
 			var dataDto = _mapper.Map<IEnumerable<PageJoinDto>?>(data);
 

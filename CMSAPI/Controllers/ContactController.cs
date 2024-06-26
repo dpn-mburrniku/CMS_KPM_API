@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using Entities.Models;
 using NetTopologySuite.Index.HPRtree;
+using Abp.Linq.Expressions;
 
 namespace CMS.API.Controllers
 {
@@ -37,8 +38,16 @@ namespace CMS.API.Controllers
             var userRoles = await _unitOfWork.BaseConfig.GetUserRolesId(userId);
             var layouts = await _unitOfWork.Layouts.GetLayoutsByRole(userRoles.FirstOrDefault(), false, new[] { "LayoutRoles" });
             List<int> layoutIds = layouts.Select(x => x.Id).ToList();
-            var ContactsList = await _unitOfWork.Contacts.FindByCondition(t => t.LanguageId == webLangId 
-            && layoutIds.Contains(t.LayoutId), false, includes).ToListAsync();
+
+            var contactQuery = PredicateBuilder.False<Contact>();
+
+            foreach (var id in layoutIds)
+            {
+                contactQuery = contactQuery.Or(t => t.LayoutId == id);
+            }
+            contactQuery = contactQuery.And(t => t.LanguageId == webLangId);
+
+            var ContactsList = await _unitOfWork.Contacts.FindByCondition(contactQuery, false, includes).ToListAsync();
 
             if (ContactsList.Count > 0)
             {

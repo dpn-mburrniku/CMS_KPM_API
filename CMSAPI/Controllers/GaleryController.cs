@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Entities.Models;
 using NetTopologySuite.Index.HPRtree;
+using Abp.Linq.Expressions;
 
 namespace CMS.API.Controllers
 {
@@ -51,8 +52,14 @@ namespace CMS.API.Controllers
 			var userRoles = await _unitOfWork.BaseConfig.GetUserRolesId(userId);
 			var layouts = await _unitOfWork.Layouts.GetLayoutsByRole(userRoles.FirstOrDefault(), false, new[] { "LayoutRoles" });
 			List<int> layoutIds = layouts.Select(x => x.Id).ToList();
-			var GaleryHeaderList = await _unitOfWork.GaleryHeaders.FindByCondition(t => t.LanguageId == webLangId
-																					 && layoutIds.Contains(t.LayoutId), false, includes).ToListAsync();
+            var filterQuery = PredicateBuilder.False<GaleryHeader>();
+
+            foreach (var id in layoutIds)
+            {
+                filterQuery = filterQuery.Or(t => t.LayoutId == id);
+            }
+            filterQuery = filterQuery.And(t => t.LanguageId == _unitOfWork.BaseConfig.GetCurrentUserLanguage());
+            var GaleryHeaderList = await _unitOfWork.GaleryHeaders.FindByCondition(filterQuery, false, includes).ToListAsync();
 
 
 			if (GaleryHeaderList.Count > 0)

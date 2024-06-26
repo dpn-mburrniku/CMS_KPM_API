@@ -12,6 +12,7 @@ using Entities.DataTransferObjects.WebDTOs;
 using Microsoft.Extensions.Configuration;
 using System.Net.Mail;
 using System.Net.Mime;
+using Abp.Linq.Expressions;
 
 namespace CMS.API.Controllers
 {
@@ -202,8 +203,14 @@ namespace CMS.API.Controllers
 			var userRoles = await _unitOfWork.BaseConfig.GetUserRolesId(userId);
 			var layouts = await _unitOfWork.Layouts.GetLayoutsByRole(userRoles.FirstOrDefault(), false, new[] { "LayoutRoles" });
 			List<int> layoutIds = layouts.Select(x => x.Id).ToList();
-			var FaqHeaderList = await _unitOfWork.FaqHeaders.FindByCondition(t => t.LanguageId == _unitOfWork.BaseConfig.GetCurrentUserLanguage()
-			&& layoutIds.Contains(t.LayoutId), false, includes).ToListAsync();
+            var faqQuery = PredicateBuilder.False<Faqheader>();
+
+            foreach (var id in layoutIds)
+            {
+                faqQuery = faqQuery.Or(t => t.LayoutId == id);
+            }
+            faqQuery = faqQuery.And(t => t.LanguageId == _unitOfWork.BaseConfig.GetCurrentUserLanguage());
+            var FaqHeaderList = await _unitOfWork.FaqHeaders.FindByCondition(faqQuery, false, includes).ToListAsync();
 
 
 			if (FaqHeaderList.Count > 0)

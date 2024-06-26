@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Entities.Models;
+using Abp.Linq.Expressions;
+using System.Runtime.InteropServices;
 
 namespace CMS.API.Controllers
 {
@@ -38,8 +40,18 @@ namespace CMS.API.Controllers
             var userId = _unitOfWork.BaseConfig.GetLoggedUserId();
             var userRoles = await _unitOfWork.BaseConfig.GetUserRolesId(userId);
             var layouts = await _unitOfWork.Layouts.GetLayoutsByRole(userRoles.FirstOrDefault(), false, new[] { "LayoutRoles" });
-            List<int> layoutIds = layouts.Select(x => x.Id).ToList();
-            var PersonelsList = await _unitOfWork.Personeli.FindByCondition(t => t.LanguageId == webLangId && t.Active == true && layoutIds.Contains(t.LayoutId), false, includes).ToListAsync();
+            List<int> layoutIds = layouts.Select(x => x.Id).ToList(); 
+            
+            var personelQuery = PredicateBuilder.False<Personel>();
+
+            foreach (var id in layoutIds)
+            {
+                personelQuery = personelQuery.Or(t => t.LayoutId == id);
+            }
+            personelQuery = personelQuery.And(t => t.LanguageId == webLangId);
+            personelQuery = personelQuery.And(t => t.Active == true);
+
+            var PersonelsList = await _unitOfWork.Personeli.FindByCondition(personelQuery, false, includes).ToListAsync();
 
             if (PersonelsList.Count > 0)
             {

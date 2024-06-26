@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Entities.Models;
+using Abp.Linq.Expressions;
+using System.Runtime.InteropServices;
 
 namespace CMS.API.Controllers
 {
@@ -40,8 +42,15 @@ namespace CMS.API.Controllers
 			var userRoles = await _unitOfWork.BaseConfig.GetUserRolesId(userId);
 			var layouts = await _unitOfWork.Layouts.GetLayoutsByRole(userRoles.FirstOrDefault(), false, new[] { "LayoutRoles" });
 			List<int> layoutIds = layouts.Select(x => x.Id).ToList();
-			var List = await _unitOfWork.Slide.FindByCondition(t => t.LanguageId == webLangId
-			&& layoutIds.Contains(t.LayoutId), false, includes).ToListAsync();
+            var slideQuery = PredicateBuilder.False<Slide>();
+
+			foreach (var id in layoutIds)
+			{
+				slideQuery = slideQuery.Or(t => t.LayoutId == id);
+			}
+            slideQuery = slideQuery.And(t => t.LanguageId == webLangId);
+
+            var List = await _unitOfWork.Slide.FindByCondition(slideQuery, false, includes).ToListAsync();
 
 
 

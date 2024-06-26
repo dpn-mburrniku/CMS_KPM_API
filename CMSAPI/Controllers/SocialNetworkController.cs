@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Entities.Models;
+using Abp.Linq.Expressions;
 
 namespace CMS.API.Controllers
 {
@@ -39,8 +40,16 @@ namespace CMS.API.Controllers
             var userRoles = await _unitOfWork.BaseConfig.GetUserRolesId(userId);
             var layouts = await _unitOfWork.Layouts.GetLayoutsByRole(userRoles.FirstOrDefault(), false, new[] { "LayoutRoles" });
             List<int> layoutIds = layouts.Select(x => x.Id).ToList();
-            var SocialNeworksList = await _unitOfWork.SocialNetwork.FindByCondition(t => t.LanguageId == webLangId && t.Active == true 
-            && layoutIds.Contains(t.LayoutId), false, includes).ToListAsync();
+            var filterQuery = PredicateBuilder.False<SocialNetwork>();
+
+            foreach (var id in layoutIds)
+            {
+                filterQuery = filterQuery.Or(t => t.LayoutId == id);
+            }
+            filterQuery = filterQuery.And(t => t.LanguageId == webLangId);
+            filterQuery = filterQuery.And(t => t.Active == true);
+
+            var SocialNeworksList = await _unitOfWork.SocialNetwork.FindByCondition(filterQuery, false, includes).ToListAsync();
 
             if (SocialNeworksList.Count > 0)
             {
