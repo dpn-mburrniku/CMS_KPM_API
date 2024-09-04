@@ -120,7 +120,8 @@ namespace Repository.Repositories
 								Name = media.Name,
 								IsSlider = model.IsSlider,
 								LanguageId = model.webLangId,
-								CreatedBy = UserId,
+                                StartDate = DateTime.Now,
+                                CreatedBy = UserId,
 								Created = DateTime.Now,
 							};
 							_cmsContext.PageMedia.Add(postMediaEntity);
@@ -311,19 +312,31 @@ namespace Repository.Repositories
 
 		public async Task<List<VitetModel>> GetVitet(int PageId, int GjuhaId, DateTime formatedDateTime)
 		{
-			var vitetLista = await (from pm in _cmsContext.PageMedia
+            //var vitetLista = await (from pm in _cmsContext.PageMedia
 
-									where pm.LanguageId == GjuhaId && pm.PageId == PageId
-												 && pm.IsSlider == false
-												 && (pm.StartDate != null ? pm.StartDate.Value <= formatedDateTime : true)
-												 && (pm.EndDate != null ? pm.EndDate.Value >= formatedDateTime : true)
-									select new VitetModel
-									{
-										Viti = pm.StartDate.Value.Year
-									}).Distinct().OrderByDescending(x => x.Viti).ToListAsync();
+            //						where pm.LanguageId == GjuhaId && pm.PageId == PageId
+            //									 && pm.IsSlider == false
+            //									 && (pm.StartDate != null ? pm.StartDate.Value <= formatedDateTime : true)
+            //									 && (pm.EndDate != null ? pm.EndDate.Value >= formatedDateTime : true)
+            //						select new VitetModel
+            //						{
+            //							Viti = pm.StartDate.Value.Year
+            //						}).Distinct().OrderByDescending(x => x.Viti).ToListAsync();
 
-			return vitetLista;
-		}
+            //return vitetLista;
+            var vitetLista = await (from pm in _cmsContext.PageMedia
+                                    where pm.LanguageId == GjuhaId
+                                          && pm.PageId == PageId
+                                          && !pm.IsSlider
+                                          && (!pm.StartDate.HasValue || pm.StartDate.Value <= formatedDateTime)
+                                          && (!pm.EndDate.HasValue || pm.EndDate.Value >= formatedDateTime)
+                                    select new VitetModel
+                                    {
+                                        Viti = pm.StartDate.HasValue ? pm.StartDate.Value.Year : pm.Created.Year 
+                                    }).Distinct().OrderByDescending(x => x.Viti).ToListAsync();
+
+            return vitetLista;
+        }
 		public int? GetPageIdFromPostimiGategoriaID(int PostimiKategoriaID, int GjuhaId)
 		{
 			int? pageId = 0;
