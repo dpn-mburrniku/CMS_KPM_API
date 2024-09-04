@@ -110,7 +110,7 @@ namespace Repository.Repositories
                                        Targeti = m.Target,
                                        IsMegaMenu = m.IsMegaMenu,
                                        IsClicked = m.IsClickable,
-                                       Url = m.Page.Template.TemplateUrl == null ? m.OtherSourceUrl :
+                                       Url = m.IsOtherSource == true ? m.OtherSourceUrl :
                                        (m.IsRedirect != true ? m.Page.Layout.Path + m.Page.Template.TemplateUrl + (m.Page.Template.TemplateUrlWithId == true ? "/" + m.PageId : "") :
                                                (from m1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                               .Include(t => t.Page)
@@ -146,7 +146,7 @@ namespace Repository.Repositories
                                                       Targeti = cm.Target,
                                                       IsMegaMenu = cm.IsMegaMenu,
                                                       IsClicked = cm.IsClickable,
-                                                      Url = cm.Page.Template.TemplateUrl == null ? cm.OtherSourceUrl :
+                                                      Url = cm.IsOtherSource == true ? cm.OtherSourceUrl :
                                                            (cm.IsRedirect != true ? cm.Page.Layout.Path + cm.Page.Template.TemplateUrl + (cm.Page.Template.TemplateUrlWithId == true ? "/" + cm.PageId : "") :
                                                                    (from cm1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                                                   .Include(t => t.Page)
@@ -182,7 +182,7 @@ namespace Repository.Repositories
                                                                      Targeti = scm.Target,
                                                                      IsMegaMenu = scm.IsMegaMenu,
                                                                      IsClicked = scm.IsClickable,
-                                                                     Url = scm.Page.Template.TemplateUrl == null ? scm.OtherSourceUrl :
+                                                                     Url = scm.IsOtherSource == true ? scm.OtherSourceUrl :
                                                                            (scm.IsRedirect != true ? scm.Page.Layout.Path + scm.Page.Template.TemplateUrl + (scm.Page.Template.TemplateUrlWithId == true ? "/" + scm.PageId : "") :
                                                                                    (from scm1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                                                                   .Include(t => t.Page)
@@ -218,7 +218,7 @@ namespace Repository.Repositories
                                                                                     Targeti = sscm.Target,
                                                                                     IsMegaMenu = sscm.IsMegaMenu,
                                                                                     IsClicked = sscm.IsClickable,
-                                                                                    Url = sscm.Page.Template.TemplateUrl == null ? sscm.OtherSourceUrl :
+                                                                                    Url = sscm.IsOtherSource == true ? sscm.OtherSourceUrl :
                                                                                           (sscm.IsRedirect != true ? sscm.Page.Layout.Path + sscm.Page.Template.TemplateUrl + (sscm.Page.Template.TemplateUrlWithId == true ? "/" + sscm.PageId : "") :
                                                                                                    (from sscm1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                                                                                   .Include(t => t.Page)
@@ -269,7 +269,7 @@ namespace Repository.Repositories
                                        Targeti = m.Target,
                                        IsMegaMenu = m.IsMegaMenu,
                                        IsClicked = m.IsClickable,
-                                       Url = m.Page.Template.TemplateUrl == null ? m.OtherSourceUrl :
+                                       Url = m.IsOtherSource == true ? m.OtherSourceUrl :
                                        (m.IsRedirect != true ? m.Page.Layout.Path + m.Page.Template.TemplateUrl + (m.Page.Template.TemplateUrlWithId == true ? "/" + m.PageId : "") :
                                                (from m1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                             .Include(t => t.Page)
@@ -305,7 +305,7 @@ namespace Repository.Repositories
                                                       Targeti = cm.Target,
                                                       IsMegaMenu = cm.IsMegaMenu,
                                                       IsClicked = cm.IsClickable,
-                                                      Url = cm.Page.Template.TemplateUrl == null ? cm.OtherSourceUrl :
+                                                      Url = cm.IsOtherSource == true ? cm.OtherSourceUrl :
                                                            (cm.IsRedirect != true ? cm.Page.Layout.Path + cm.Page.Template.TemplateUrl + (cm.Page.Template.TemplateUrlWithId == true ? "/" + cm.PageId : "") :
                                                                    (from cm1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                                                 .Include(t => t.Page)
@@ -341,7 +341,7 @@ namespace Repository.Repositories
                                                                      Targeti = scm.Target,
                                                                      IsMegaMenu = scm.IsMegaMenu,
                                                                      IsClicked = scm.IsClickable,
-                                                                     Url = scm.Page.Template.TemplateUrl == null ? scm.OtherSourceUrl :
+                                                                     Url = scm.IsOtherSource == true ? scm.OtherSourceUrl :
                                                                            (scm.IsRedirect != true ? scm.Page.Layout.Path + scm.Page.Template.TemplateUrl + (scm.Page.Template.TemplateUrlWithId == true ? "/" + scm.PageId : "") :
                                                                                    (from scm1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                                                               .Include(t => t.Page)
@@ -377,7 +377,7 @@ namespace Repository.Repositories
                                                                                     Targeti = sscm.Target,
                                                                                     IsMegaMenu = sscm.IsMegaMenu,
                                                                                     IsClicked = sscm.IsClickable,
-                                                                                    Url = sscm.Page.Template.TemplateUrl == null ? sscm.OtherSourceUrl :
+                                                                                    Url = sscm.IsOtherSource == true ? sscm.OtherSourceUrl :
                                                                                           (sscm.IsRedirect != true ? sscm.Page.Layout.Path + sscm.Page.Template.TemplateUrl + (sscm.Page.Template.TemplateUrlWithId == true ? "/" + sscm.PageId : "") :
                                                                                                    (from sscm1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                                                               .Include(t => t.Page)
@@ -430,7 +430,7 @@ namespace Repository.Repositories
                                        Targeti = m.Target,
                                        IsMegaMenu = m.IsMegaMenu,
                                        IsClicked = m.IsClickable,
-                                       Url = m.Page.Template.TemplateUrl == null ? m.OtherSourceUrl :
+                                       Url = m.IsOtherSource == true ? m.OtherSourceUrl :
                                        (m.IsRedirect != true ? m.Page.Layout.Path + m.Page.Template.TemplateUrl + (m.Page.Template.TemplateUrlWithId == true ? "/" + m.PageId : "") :
                                                (from m1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                             .Include(t => t.Page)
@@ -497,7 +497,7 @@ namespace Repository.Repositories
                                                         + m.Page.PageName,
                                              OtherSource = m.IsOtherSource,
                                              Targeti = m.Target,
-                                             Url = m.Page.Template.TemplateUrl == null ? m.OtherSourceUrl :
+                                             Url = m.IsOtherSource == true ? m.OtherSourceUrl :
                                                   (m.IsRedirect != true ? m.Page.Layout.Path + m.Page.Template.TemplateUrl + (m.Page.Template.TemplateUrlWithId == true ? "/" + m.PageId : "") :
                                                           (from m1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                                        .Include(t => t.Page)
@@ -576,7 +576,7 @@ namespace Repository.Repositories
                                           Targeti = m.Target,
                                           IsMegaMenu = m.IsMegaMenu,
                                           IsClicked = m.IsClickable,
-                                          Url = m.Page.Template.TemplateUrl == null ? m.OtherSourceUrl :
+                                          Url = m.IsOtherSource == true ? m.OtherSourceUrl :
                                           (m.IsRedirect != true ? m.Page.Layout.Path + m.Page.Template.TemplateUrl + (m.Page.Template.TemplateUrlWithId == true ? "/" + m.PageId : "") :
                                                (from m1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                             .Include(t => t.Page)
@@ -616,7 +616,7 @@ namespace Repository.Repositories
                                                     Targeti = m.Target,
                                                     IsMegaMenu = m.IsMegaMenu,
                                                     IsClicked = m.IsClickable,
-                                                    Url = m.Page.Template.TemplateUrl == null ? m.OtherSourceUrl :
+                                                    Url = m.IsOtherSource == true ? m.OtherSourceUrl :
                                                     (m.IsRedirect != true ? m.Page.Layout.Path + m.Page.Template.TemplateUrl + (m.Page.Template.TemplateUrlWithId == true ? "/" + m.PageId : "") :
                                                        (from m1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                                     .Include(t => t.Page)
@@ -665,7 +665,7 @@ namespace Repository.Repositories
                                                           Targeti = m.Target,
                                                           IsMegaMenu = m.IsMegaMenu,
                                                           IsClicked = m.IsClickable,
-                                                          Url = m.Page.Template.TemplateUrl == null ? m.OtherSourceUrl :
+                                                          Url = m.IsOtherSource == true ? m.OtherSourceUrl :
                                                           (m.IsRedirect != true ? m.Page.Layout.Path + m.Page.Template.TemplateUrl + (m.Page.Template.TemplateUrlWithId == true ? "/" + m.PageId : "") :
                                                             (from m1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                                         .Include(t => t.Page)
@@ -713,7 +713,7 @@ namespace Repository.Repositories
                                                          Targeti = m.Target,
                                                          IsMegaMenu = m.IsMegaMenu,
                                                          IsClicked = m.IsClickable,
-                                                         Url = m.Page.Template.TemplateUrl == null ? m.OtherSourceUrl :
+                                                         Url = m.IsOtherSource == true ? m.OtherSourceUrl :
                                                           (m.IsRedirect != true ? m.Page.Layout.Path + m.Page.Template.TemplateUrl + (m.Page.Template.TemplateUrlWithId == true ? "/" + m.PageId : "") :
                                                             (from m1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                                         .Include(t => t.Page)
@@ -768,7 +768,7 @@ namespace Repository.Repositories
                                           Targeti = m.Target,
                                           IsMegaMenu = m.IsMegaMenu,
                                           IsClicked = m.IsClickable,
-                                          Url = m.Page.Template.TemplateUrl == null ? m.OtherSourceUrl :
+                                          Url = m.IsOtherSource == true ? m.OtherSourceUrl :
                                                           (m.IsRedirect != true ? m.Page.Layout.Path + m.Page.Template.TemplateUrl + (m.Page.Template.TemplateUrlWithId == true ? "/" + m.PageId : "") :
                                                             (from m1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                                         .Include(t => t.Page)
@@ -811,7 +811,7 @@ namespace Repository.Repositories
                                        Targeti = m.Target,
                                        IsMegaMenu = m.IsMegaMenu,
                                        IsClicked = m.IsClickable,
-                                       Url = m.Page.Template.TemplateUrl == null ? m.OtherSourceUrl :
+                                       Url = m.IsOtherSource == true ? m.OtherSourceUrl :
                                                           (m.IsRedirect != true ? m.Page.Layout.Path + m.Page.Template.TemplateUrl + (m.Page.Template.TemplateUrlWithId == true ? "/" + m.PageId : "") :
                                                             (from m1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                                         .Include(t => t.Page)
@@ -851,7 +851,7 @@ namespace Repository.Repositories
                                        Targeti = m.Target,
                                        IsMegaMenu = m.IsMegaMenu,
                                        IsClicked = m.IsClickable,
-                                       Url = m.Page.Template.TemplateUrl == null ? m.OtherSourceUrl :
+                                       Url = m.IsOtherSource == true ? m.OtherSourceUrl :
                                                           (m.IsRedirect != true ? m.Page.Layout.Path + m.Page.Template.TemplateUrl + (m.Page.Template.TemplateUrlWithId == true ? "/" + m.PageId : "") :
                                                             (from m1 in _cmsContext.Menus.Include(t => t.MenuType)
                                                                                         .Include(t => t.Page)

@@ -534,25 +534,25 @@ namespace CMS.API.Controllers
 		public async Task<IActionResult> GetPostCategories(int? LayoutId, int langId)
 		{
 			string[] includes = { "Layout", "Page" };
-			var userId = _unitOfWork.BaseConfig.GetLoggedUserId();
-			var userRoles = await _unitOfWork.BaseConfig.GetUserRolesId(userId);
-			var layouts = await _unitOfWork.Layouts.GetLayoutsByRole(userRoles.FirstOrDefault(), false, new[] { "LayoutRoles" });
             
 			var postCategoryQuery = PredicateBuilder.False<PostCategory>();
-            if (LayoutId.HasValue)
+            if (LayoutId.HasValue && LayoutId > 0)
             {
-                postCategoryQuery = postCategoryQuery.And(x => x.LayoutId == LayoutId);
+                postCategoryQuery = postCategoryQuery.Or(x => x.LayoutId == LayoutId);
             }
             else
             {
+                var userId = _unitOfWork.BaseConfig.GetLoggedUserId();
+                var userRoles = await _unitOfWork.BaseConfig.GetUserRolesId(userId);
+                var layouts = await _unitOfWork.Layouts.GetLayoutsByRole(userRoles.FirstOrDefault(), false, new[] { "LayoutRoles" });
                 foreach (var id in layouts.Select(x => x.Id))
                 {
                     postCategoryQuery = postCategoryQuery.Or(t => t.LayoutId == id);
                 }
             }
-            postCategoryQuery = postCategoryQuery.And(x => x.Active == true);
-            postCategoryQuery = postCategoryQuery.And(x => x.LanguageId == langId);
-            var postCategoryList = await _unitOfWork.PostCategories.FindByCondition(postCategoryQuery, false, includes).OrderBy(x => x.LayoutId).ThenBy(x => x.Id).ToListAsync();
+			postCategoryQuery = postCategoryQuery.And(x => x.Active == true);
+			postCategoryQuery = postCategoryQuery.And(x => x.LanguageId == langId);
+			var postCategoryList = await _unitOfWork.PostCategories.FindByCondition(postCategoryQuery, false, includes).OrderBy(x => x.LayoutId).ThenBy(x => x.Id).ToListAsync();
 
             var postCategoryDto = _mapper.Map<IEnumerable<PostCategoryListDto>?>(postCategoryList);
 			return Ok(postCategoryDto);

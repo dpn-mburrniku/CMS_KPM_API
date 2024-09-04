@@ -36,21 +36,18 @@ namespace CMS.API.Controllers
 		{
 			string[] includes = { "Layout", "Template", "Media" };
 			List<int> layoutIds = null;
-			if (LayoutId == null || LayoutId == 0)
-			{
-				var userId = _unitOfWork.BaseConfig.GetLoggedUserId();
-				var userRoles = await _unitOfWork.BaseConfig.GetUserRolesId(userId);
-				var layouts = await _unitOfWork.Layouts.GetLayoutsByRole(userRoles.FirstOrDefault(), false, new[] { "LayoutRoles" });
-				layoutIds = layouts.Select(x => x.Id).ToList();
-            }
 
             var pagesQuery = PredicateBuilder.False<Page>();
-            if (LayoutId.HasValue)
+            if (LayoutId.HasValue && LayoutId > 0)
             {
-                pagesQuery = pagesQuery.And(x => x.LayoutId == LayoutId);
+                pagesQuery = pagesQuery.Or(x => x.LayoutId == LayoutId);
             }
             else
             {
+                var userId = _unitOfWork.BaseConfig.GetLoggedUserId();
+                var userRoles = await _unitOfWork.BaseConfig.GetUserRolesId(userId);
+                var layouts = await _unitOfWork.Layouts.GetLayoutsByRole(userRoles.FirstOrDefault(), false, new[] { "LayoutRoles" });
+                layoutIds = layouts.Select(x => x.Id).ToList();
                 foreach (var id in layoutIds)
                 {
                     pagesQuery = pagesQuery.Or(t => t.LayoutId == id);
@@ -73,21 +70,19 @@ namespace CMS.API.Controllers
         {
             string[] includes = { "Layout", "Template", "Media" };
             List<int> layoutIds = null;
-            if (LayoutId == null || LayoutId == 0)
+
+            var contactQuery = PredicateBuilder.False<Contact>();
+            if (LayoutId.HasValue && LayoutId > 0)
+            {
+                contactQuery = contactQuery.Or(x => x.LayoutId == LayoutId);
+            }
+            else
             {
                 var userId = _unitOfWork.BaseConfig.GetLoggedUserId();
                 var userRoles = await _unitOfWork.BaseConfig.GetUserRolesId(userId);
                 var layouts = await _unitOfWork.Layouts.GetLayoutsByRole(userRoles.FirstOrDefault(), false, new[] { "LayoutRoles" });
                 layoutIds = layouts.Select(x => x.Id).ToList();
-            }
-            var contactQuery = PredicateBuilder.False<Contact>();
-			if (LayoutId.HasValue)
-			{
-				contactQuery = contactQuery.And(x => x.LayoutId == LayoutId);
-			}
-			else
-			{
-				foreach (var id in layoutIds)
+                foreach (var id in layoutIds)
 				{
 					contactQuery = contactQuery.Or(t => t.LayoutId == id);
 				}
